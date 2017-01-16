@@ -1,0 +1,264 @@
+@import "./mixin.less";
+
+.cdlist-root-container {
+  .cdlist-search-container,
+  .cdlist-filter-container,
+  .cdlist-sort-container,
+  .cdlist-datepicker-container {
+    margin-bottom: 20px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+/**
+ * search 样式
+ */
+.cdlist-search-container {
+  font-size: 0;
+
+  .cdlist-search-input {
+    &:focus {
+      -webkit-box-shadow: none;
+              box-shadow: none;
+
+      outline: none;
+      border: 1px solid darken(@borderColor, 20%);
+    }
+
+    border: 1px solid @borderColor;
+    font-size: 14px;
+    line-height: 16px;
+    padding: 7px 5px;
+  }
+
+  .cdlist-search-action {
+    line-height: 16px;
+    font-size: 14px;
+    .btn-padding(8px, 14px, @mainColor, #fff);
+    text-decoration: none;
+  }
+}
+
+/**
+ * filter 样式
+ */
+.cdlist-filter-container {
+  overflow: hidden;
+  font-size: 14px;
+  line-height: 16px;
+
+  .cdlist-filter-list,
+  .cdlist-filter-raw-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .cdlist-filter-list {
+    .cdlist-filter-list-item {
+      overflow: hidden;
+      margin-bottom: 5px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  &.cdlist-filter-container-line {
+    .cdlist-filter-list {
+      .cdlist-filter-list-item {
+        overflow: hidden;
+        margin-bottom: 5px;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+
+        .cdlist-filter-select-name {
+          display: inline-block;
+          padding: 7px 5px;
+        }
+
+        .cdlist-filter-raw-list {
+          display: inline-block;
+
+          font-size: 0;
+
+          .cdlist-filter-raw-item {
+            display: inline-block;
+            margin-right: 10px;
+
+            &.cdlist-filter-raw-item-active {
+              a {
+                background: @mainColor;
+                color: #fff;
+
+                &:hover {
+                  background: @mainColor;
+                  color: #fff;
+                }
+              }
+            }
+
+            a {
+              font-size: 14px;
+              line-height: 16px;
+              display: inline-block;
+              padding: 7px 5px;
+              color: @mainColor;
+              text-decoration: none;
+              .transition(background 0.3s);
+
+              &:hover {
+                background: @borderColor;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+
+/**
+ * sort 样式
+ */
+.cdlist-sort-container {
+  .cdlist-sort-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-size: 0;
+
+    .cdlist-sort-item {
+      font-size: 14px;
+      line-height: 16px;
+      display: inline-block;
+      padding: 7px 5px;
+      color: @mainColor;
+      text-decoration: none;
+      margin-right: 5px;
+      cursor: pointer;
+      .transition(background-color 0.3s);
+
+      &.cdlist-sort-item-active {
+        color: #fff;
+        background: @mainColor;
+
+        &:hover {
+          color: #fff;
+          background: @mainColor;
+        }
+
+        &.cdlist-sort-type-asc {
+          background-image: url('./imgs/up.png');
+          background-position: right center;
+          background-repeat: no-repeat;
+          padding-right: 25px;
+          background-size: auto 16px;
+        }
+
+        &.cdlist-sort-type-desc {
+          background-image: url('./imgs/down.png');
+          background-position: right center;
+          background-repeat: no-repeat;
+          padding-right: 25px;
+          background-size: auto 16px;
+        }
+
+        .cdlist-sort-type-desc {
+
+        }
+      }
+
+      &:hover {
+        background: @borderColor;
+      }
+    }
+  }
+}
+
+
+/**
+ * 分页
+ */
+.cdlist-pagination-container {
+  .mod-page {
+   overflow: hidden;
+   font-size: 14px;
+
+   .mod-page-item {
+     display: inline-block;
+     transition-property: background-color;
+     transition-duration: .5s;
+     margin-right: 10px;
+     background: #fff;
+     color: #333333;
+     text-decoration: none;
+     padding: 5px 10px;
+     .transition(background-color 0.3s);
+
+     &:hover {
+       background-color: @borderColor;
+     }
+   }
+
+   .mod-page-more {
+     display: inline-block;
+     padding: 10px 15px;
+   }
+
+   .mod-page-item.mod-page-item-active {
+     color: #fff;
+     border: none;
+     background-color: @mainColor;
+   }
+
+   .mod-page-item-disabled {
+     color: #dddddd;
+     background-color: #fff;
+   }
+  }
+}
+
+/**
+ * 日历
+ */
+.cdlist-datepicker-container {
+  .cdlist-datepicker-item {
+    font-size: 0;
+    overflow: hidden;
+    margin-bottom: 5px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    input {
+      &:focus {
+        -webkit-box-shadow: none;
+                box-shadow: none;
+
+        outline: none;
+        border: 1px solid darken(@borderColor, 20%);
+      }
+
+      border: 1px solid @borderColor;
+      font-size: 14px;
+      line-height: 16px;
+      padding: 7px 5px;
+    }
+
+    .cdlist-datepicker-label {
+      display: inline-block;
+      font-size: 14px;
+      line-height: 16px;
+      margin-right: 5px;
+    }
+  }
+}

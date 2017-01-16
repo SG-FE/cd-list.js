@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta charset="utf-8">
+    </head>
+    <body>
+
+        <div id="mysearh-wrap"></div>
+        <div id="filter-wrap"></div>
+        <div id="cdlist-demo"></div>
+        <div class="inputs-wrap">
+          <input id="enddate" placeholder="htmlend" name="enddate"/>
+        </div>
+        <div id="page-wrap"></div>
+
+        <script type="text/javascript" src="//cdn.bootcss.com/jquery/3.1.1/jquery.js" charset="utf-8"></script>
+        <link href="//cdn.bootcss.com/flatpickr/2.2.8/flatpickr.css" rel="stylesheet">
+        <script src="//cdn.bootcss.com/flatpickr/2.2.8/flatpickr.js"></script>
+        <script src="//cdn.bootcss.com/flatpickr/2.2.8/l10n/zh.js"></script>
+        <script type="text/javascript" src="/lib/cdlist.js" charset="utf-8"></script>
+        <link href="/lib/cdlist.css" rel='stylesheet' type='text/css'/>
+
+        <style>
+          #mysearh-wrap,
+          #filter-wrap,
+          #cdlist-demo,
+          #page-wrap {
+            margin-bottom: 10px;
+          }
+        </style>
+        <script>
+          var sort = window.sort = new CdList.addons.Sort({
+            historyEnable: 1,
+
+            onChange: function () {
+              console.log('sort-change')
+            },
+
+            datas: [
+              {
+                key: 'defautl',
+                name: '默认'
+              },
+              {
+                key: 'price',
+                name: '价格排序',
+                types: [
+                  CdList.addons.Sort.SORT_MAP.ASC,
+                  CdList.addons.Sort.SORT_MAP.DESC
+                ]
+              },
+              {
+                key: 'time',
+                name: '时间排序',
+                types: [
+                  CdList.addons.Sort.SORT_MAP.ASC,
+                  CdList.addons.Sort.SORT_MAP.DESC
+                ]
+              }
+            ]
+          });
+
+          var datepicker = window.datepicker = new CdList.addons.DatePicker({
+            historyEnable: 1,
+            onChange: function () {
+              console.log('datepicker-change')
+            },
+            datas: [
+              {
+                label: '开始日期',
+                name: 'start_date',
+                placeholder: 'startdate',
+                flatPickrConfig: {
+                  // mode: 'range',
+                  onChange: function () {
+                    // debugger;
+                  },
+
+                  onClose: function (selectedDates, dateStr, instance) {
+                    // debugger;
+                  }
+                }
+              },
+
+              {
+                label: '结束日期',
+                name: 'end_date',
+                placeholder: 'enddate'
+              }
+            ]
+          });
+
+          datepicker.on('flatinited', function (e, flatArr) {
+            console.log(flatArr);
+          });
+
+          var search = window.search = new CdList.addons.Search({
+            btnText: '点我吧！',
+
+            placeholder: '需要输入1开头的数字',
+
+            historyEnable: true,
+
+            historyKey: 'mysearch',
+
+            container: '#mysearh-wrap',
+
+            regex: /133.*/,
+
+            onChange: function () {
+              console.log('search-change')
+            }
+          });
+
+          var pg = window.pg = new CdList.addons.Pagination({
+            pagination: {
+              allwaysShow: false,
+
+              maxShowPage: 5,
+
+              textLabel: ['头', '上', '下', '尾']
+            },
+
+            onChange: function () {
+              console.log('page-change')
+            },
+
+            historyEnable: true,
+
+            container: '#page-wrap',
+
+            getSetting: function (json) {
+              return {
+                total: 10
+              }
+            }
+          });
+
+          var filter = window.filter = new CdList.addons.Filter({
+            historyEnable: 1,
+
+            line: 1,
+
+            onChange: function () {
+              console.log('filter-change');
+            },
+
+            container: '#filter-wrap',
+
+            filters: [
+              {
+                label: '用户属性',
+
+                name: 'usertype',
+
+                className: 'item-usertype',
+
+                historyKey: 'my-usertype',
+
+                datas: [
+                  { name: '不限', value: 0 },
+                  { name: '僵尸用户', value: '1' },
+                  { name: '活跃用户', value: '2' }
+                ]
+              },
+
+              {
+                label: '用户地域',
+
+                name: 'userarea',
+
+                datas: [
+                  { name: '不限', value: 0 },
+                  { name: '北京', value: '1' },
+                  { name: '上海', value: '2' }
+                ]
+              }
+            ]
+          });
+
+          var cdList = window.cdlist = new CdList({
+            disableHistory: false,
+
+            getUrl: function (data) {
+              var param = {};
+
+              console.log(data);
+
+              return '/ajax.json'
+            },
+
+            getAjaxData: function (url) {
+              return $.ajax({
+                url: url,
+                dataType: 'json'
+              });
+            },
+
+            rows: function (item) {
+              return '<li>hi:' + item.name + '</li>'
+            },
+
+            getRowsData: function (json) {
+              return json.list;
+            },
+
+            addons: [ sort, filter, pg, search, datepicker]
+          }, '#cdlist-demo');
+
+          cdList.on('created', function () {
+            alert(1);
+          });
+
+          cdList.getList();
+
+        </script>
+    </body>
+</html>
