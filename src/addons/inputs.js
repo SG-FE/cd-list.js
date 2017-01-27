@@ -152,6 +152,9 @@ export default class Inputs extends mixin(EventMixin) {
   }
 
   setValue (name, val, preventHistory) {
+    // val 必须有值
+    val = val || '';
+
     if (this._getNames().indexOf(name) == -1) {
       return;
     }
@@ -167,7 +170,8 @@ export default class Inputs extends mixin(EventMixin) {
 
     // 判断 regex
     // 正则校验失败触发 error
-    if (data.regex && !data.regex.test(val)) {
+    // 如果输入值为空 那么不进行判断
+    if (val !== '' && data.regex && !data.regex.test(val)) {
       $(input).val(oriValue[name]);
       this.trigger('error', [input, val]);
       return;
@@ -179,7 +183,11 @@ export default class Inputs extends mixin(EventMixin) {
     if (!preventHistory && this.option.historyEnable) {
       let historyKey = this._getDataByName(name).historyKey || name;
 
-      this.root.setHistory(historyKey, val);
+      if (val === '') {
+        this.root.removeHistory(historyKey);
+      } else {
+        this.root.setHistory(historyKey, val);
+      }
     }
 
 

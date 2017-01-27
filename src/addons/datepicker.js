@@ -72,7 +72,7 @@ export default class DatePicker extends Inputs {
   }
 
   initView () {
-    this._getContainer().html(TPL_LAYOUT);
+    this._getContainer().append(TPL_LAYOUT);
     this._createDatePickerInput();
 
     Inputs.prototype.initView.apply(this);
@@ -92,25 +92,23 @@ export default class DatePicker extends Inputs {
       }, BASE_FLAT_CONFIG, data.flatPickrConfig);
 
       // 关闭时触发改变
-      if (config.onClose) {
-        let userCallback = config.onClose;
+      let userCallback = config.onClose;
 
-        config.onClose = function (selectedDates, dateStr, instance) {
-          if (!dateStr) {
-            return;
-          }
-          self.setValue(data.name, dateStr);
+      config.onClose = function (selectedDates, dateStr, instance) {
+        if (!selectedDates || !selectedDates.length) {
+          return;
+        }
 
-          userCallback.apply(this, Array.prototype.slice.apply(arguments));
-        };
-      } else {
-        config.onClose = function (selectedDates, dateStr, instance) {
-          if (!dateStr) {
-            return;
-          }
-          self.setValue(data.name, dateStr);
-        };
-      }
+        // 生成 history value
+        let joinChar = instance.config.mode !== "range" ? "; " : instance.l10n.rangeSeparator;
+        let newDateStr = selectedDates.map(function (dObj) {
+    			return instance.formatDate(instance.config.dateFormat, dObj);
+    		}).join(joinChar);
+
+        self.setValue(data.name, newDateStr);
+
+        userCallback && userCallback.apply(this, Array.prototype.slice.apply(arguments));
+      };
 
       flatPickrArr[data.name] = new Flatpickr(input, config);
     });

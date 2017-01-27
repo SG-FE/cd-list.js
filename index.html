@@ -9,11 +9,8 @@
         <div id="mysearh-wrap"></div>
         <div id="filter-wrap"></div>
         <div id="cdlist-demo"></div>
-        <div class="inputs-wrap">
-          <input id="enddate" placeholder="htmlend" name="enddate"/>
-        </div>
         <div id="page-wrap"></div>
-
+        
         <script type="text/javascript" src="//cdn.bootcss.com/jquery/3.1.1/jquery.js" charset="utf-8"></script>
         <link href="//cdn.bootcss.com/flatpickr/2.2.8/flatpickr.css" rel="stylesheet">
         <script src="//cdn.bootcss.com/flatpickr/2.2.8/flatpickr.js"></script>
@@ -29,6 +26,9 @@
             margin-bottom: 10px;
           }
         </style>
+
+
+
         <script>
           var sort = window.sort = new CdList.addons.Sort({
             historyEnable: 1,
@@ -39,7 +39,7 @@
 
             datas: [
               {
-                key: 'defautl',
+                key: '',
                 name: '默认'
               },
               {
@@ -159,7 +159,7 @@
                 historyKey: 'my-usertype',
 
                 datas: [
-                  { name: '不限', value: 0 },
+                  { name: '不限', value: '' },
                   { name: '僵尸用户', value: '1' },
                   { name: '活跃用户', value: '2' }
                 ]
@@ -171,7 +171,7 @@
                 name: 'userarea',
 
                 datas: [
-                  { name: '不限', value: 0 },
+                  { name: '不限', value: '' },
                   { name: '北京', value: '1' },
                   { name: '上海', value: '2' }
                 ]
@@ -208,9 +208,6 @@
             addons: [ sort, filter, pg, search, datepicker]
           }, '#cdlist-demo');
 
-          cdList.on('created', function () {
-            alert(1);
-          });
 
           cdList.getList();
 

@@ -83,7 +83,12 @@ export default class Pagination {
 
         // 设置 filter 的 hash
         if (self.option.historyEnable && !self.preventSet) {
-          self.root.setHistory(self.option.historyKey, currentPage);
+          // 第一页时 removeHistory
+          if (currentPage === 0) {
+            self.root.removeHistory(self.option.historyKey);
+          } else {
+            self.root.setHistory(self.option.historyKey, currentPage);
+          }
         }
 
         self.option.onChange && self.option.onChange(currentPage);

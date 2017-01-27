@@ -85,7 +85,10 @@ class Sort {
   }
 
   activeSort (key, type, preventHistory) {
-    var $item = this._getContainer().find('.cdlist-sort-item[data-sort-key=' + key + ']');
+    // key 不能是 undefined
+    key = (key === undefined) ? '' : key;
+
+    var $item = this._getContainer().find('.cdlist-sort-item[data-sort-key="' + key + '"]');
     var filterData = this._findDataItem(key);
 
     if (!$item.length || !filterData) {
@@ -99,7 +102,11 @@ class Sort {
       this.$activeItems = $item.addClass('cdlist-sort-item-active');
 
       if (!preventHistory && this.option.historyEnable) {
-        this.root.setHistory(this.option.historyKey, key);
+        if (key === '') {
+          this.root.removeHistory(this.option.historyKey);
+        } else {
+          this.root.setHistory(this.option.historyKey, key);
+        }
       }
     }
 

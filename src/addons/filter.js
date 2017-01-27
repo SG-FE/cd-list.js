@@ -101,6 +101,7 @@ export default class Filter {
     // 发生改变立即进行重新请求
     if (self.option.line) {
       self._getContainer().delegate('.cdlist-filter-raw-item', 'click', function (e, preventSet) {
+        // 更新显示并请求数据
         $(this).addClass('cdlist-filter-raw-item-active')
           .siblings().removeClass('cdlist-filter-raw-item-active');
 
@@ -112,7 +113,13 @@ export default class Filter {
           var key = $(this).attr('data-name');
           var value = $(this).attr('data-value');
 
-          self._setHash(key, value, true);
+          // 如果内容为空则进行 history 的移除
+          if (value === '') {
+            var filter = self._getFilterByName(key);
+            self.root.removeHistory(filter.historyKey || filter.name);
+          } else {
+            self._setHash(key, value);
+          }
         }
 
         self.option.onChange && self.option.onChange();
@@ -127,7 +134,7 @@ export default class Filter {
           var key = $(this).prop('name');
           var value = $(this).val();
 
-          self._setHash(key, value, true);
+          self._setHash(key, value);
         }
 
         self.option.onChange && self.option.onChange();
@@ -191,6 +198,9 @@ export default class Filter {
   setActive (name, value, preventHistory) {
     var filter = this._getFilterByName(name);
     var self = this;
+
+    // value 不能是 undefined
+    value = value || '';
 
     if (!filter) {
       return;

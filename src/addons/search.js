@@ -61,7 +61,7 @@ export default class Search extends Inputs {
   initView () {
     let html = template(TPL_SEARCH, this.option);
 
-    this._getContainer().html(html);
+    this._getContainer().append(html);
 
     Inputs.prototype.initView.apply(this);
 
