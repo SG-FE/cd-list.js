@@ -1,6 +1,6 @@
 {
   "name": "cdlist",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "cdlist-library",
   "main": "lib/cdlist.js",
   "scripts": {
