@@ -2,7 +2,7 @@
   "name": "cdlist",
   "version": "0.0.1",
   "description": "cdlist-library",
-  "main": "src/index.js",
+  "main": "lib/cdlist.js",
   "scripts": {
     "build": "webpack --mode=build",
     "dev": "webpack --progress --colors --watch --mode=dev"
