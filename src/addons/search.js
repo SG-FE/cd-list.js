@@ -72,8 +72,12 @@ export default class Search extends Inputs {
     this._getContainer().delegate('.cdlist-search-action', 'click', (e) => {
       let $input = this._getContainer().find('.cdlist-search-input');
 
-      this.setValue($input.prop('name'), $input.val());
+      this.setValue($input.val());
     });
+  }
+
+  setValue (value) {
+    Inputs.prototype.setValue.apply(this, [this.option.name, value]);
   }
 
   getAddonData () {
