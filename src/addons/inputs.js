@@ -59,7 +59,7 @@ export default class Inputs extends mixin(EventMixin) {
         if (e.keyCode == 13) {
           let $input = $(e.target);
 
-          this.setValue($input.prop('name'), $input.val());
+          Inputs.prototype.setValue.apply(this, [$input.prop('name'), $input.val()]);
         }
       });
     }
