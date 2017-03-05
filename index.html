@@ -37,194 +37,107 @@
 
 
         <script>
-          var sort = window.sort = new CdList.addons.Sort({
-            historyEnable: 1,
 
-            onChange: function () {
-              console.log('sort-change')
-            },
+        var DEFAULT_IMAGE = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAMAAADzN3VRAAAAk1BMVEUAAAD////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////ROyVeAAAAMHRSTlMA3remQMMv+eu2RzznyrysmJNlRA8G7+TVv7KnooyEelopIxMK4F5JNAH284d0VR38f9wYAAAA2UlEQVQoz52Q6Q6CMBCEC7a2pdy3HIKA99X3fzq3+EMQSIybdLLNl53MLvq5oizRnrPESBt7M0tKgsR1N2e2vyPM5oindci1zlOwlRg1tJ6CSj5QVFhTgKUP4dipC8MvYusgR9PJuF210HY4CAID4vhSwPdce+XW3audcmoyxlLjQKvPeJuA0IPAWDiSekPnHJ7W9osQMTpSrMhJtY47jmkqslbtajXOSZaIry0RwpfI7eOWF0MQWkVPptmOMgA1w/7+cT0MIBvQOM10ricbi3D9Xdy+lBH6p15BIw0F5vgmRQAAAABJRU5ErkJggg==';
 
-            datas: [
-              {
-                key: '',
-                name: '默认'
-              },
-              {
-                key: 'price',
-                name: '价格排序',
-                types: [
-                  CdList.addons.Sort.SORT_MAP.ASC,
-                  CdList.addons.Sort.SORT_MAP.DESC
-                ]
-              },
-              {
-                key: 'time',
-                name: '时间排序',
-                types: [
-                  CdList.addons.Sort.SORT_MAP.ASC,
-                  CdList.addons.Sort.SORT_MAP.DESC,
-                  'my1',
-                  'my2'
-                ]
-              }
-            ]
-          });
+        // 初始化搜索插件
+        var search = window.search = new CdList.addons.Search({
+          historyEnable: 1,
+          placeholder: '输入您想查询的内容'
+        });
 
-          var datepicker = window.datepicker = new CdList.addons.DatePicker({
-            historyEnable: 1,
-            onChange: function () {
-              console.log('datepicker-change')
-            },
-            datas: [
-              {
-                label: '开始日期',
-                name: 'start_date',
-                placeholder: 'startdate',
-                flatPickrConfig: {
-                  // mode: 'range',
-                  onChange: function () {
-                    // debugger;
-                  },
-
-                  onClose: function (selectedDates, dateStr, instance) {
-                    // debugger;
-                  }
-                }
-              },
-
-              {
-                label: '结束日期',
-                name: 'end_date',
-                placeholder: 'enddate'
-              }
-            ]
-          });
-
-          datepicker.on('flatinited', function (e, flatArr) {
-            console.log(flatArr);
-          });
-
-          var search = window.search = new CdList.addons.Search({
-            btnText: '点我吧！',
-
-            resetList: ['pagination'],
-
-            placeholder: '需要输入1开头的数字',
-
-            historyEnable: 1,
-
-            historyKey: 'mysearch',
-
-            container: '#mysearh-wrap',
-
-            regex: /1.*/,
-
-            onChange: function () {
-              console.log('search-change')
+        // 初始化分页插件
+        var pg = window.pg = new CdList.addons.Pagination({
+          historyEnable: 1,
+          onChange: function () {
+            $('body, html').animate({
+              scrollTop: $('.cdlist-container').offset().top
+            }, 300);
+          },
+          getSetting: function (json) {
+            return {
+              total: parseInt(json.count / 13)
             }
-          });
+          }
+        });
 
-          search.on('error', function () {
-            alert('输出啦');
-          })
-
-          var pg = window.pg = new CdList.addons.Pagination({
-            pagination: {
-              allwaysShow: false,
-
-              maxShowPage: 5
+        // 初始化筛选插件
+        var filter = window.filter = new CdList.addons.Filter({
+          historyEnable: 1,
+          line: 1,
+          filters: [
+            {
+              label: '服务类型：',
+              name: 'types',
+              datas: [
+                { name: '不限', value: '' },
+                { name: '餐饮服务', value: '05' },
+                { name: '汽车服务', value: '01' },
+                { name: '购物服务', value: '06' },
+                { name: '医疗服务', value: '09' },
+              ]
             },
-
-            onChange: function () {
-              console.log('page-change')
-            },
-
-            historyEnable: true,
-
-            container: '#page-wrap',
-
-            getSetting: function (json) {
-              return {
-                total: 10
-              }
+            {
+              label: '城市编码：',
+              name: 'city',
+              datas: [
+                { name: '北京', value: 'beijing' },
+                { name: '上海', value: 'shanghai' },
+                { name: '深圳', value: 'shenzhen' },
+                { name: '广州', value: 'guangzhou' },
+              ]
             }
-          });
+          ]
+        });
 
-          var filter = window.filter = new CdList.addons.Filter({
-            historyEnable: 1,
+        // 创建 cdlist 表格应用，整合所有插件
+        var cdList = window.cdlist = new CdList({
+          ulClass: 'amap-list',
+          addons: [search, filter, pg],
 
-            line: 1,
+          getUrl: function (data) {
+            var param = {
+              keywords: data.search,
+              types: data.filter.types,
+              city: data.filter.city,
+              page: data.pagination + 1,
+              key: '6a8449ec9b2da3fcff320383bfc69e92',
+              extensions: 'all',
+              offset: 13
+            };
+            return 'https://restapi.amap.com/v3/place/text?' + $.param(param);
+          },
 
-            onChange: function () {
-              console.log('filter-change');
-            },
+          empty: function () {
+            return '<div class="amap-list-empty">抱歉，没有您查找的 POI </div>'
+          },
 
-            container: '#filter-wrap',
+          getAjaxData: function (url) {
+            return $.ajax({
+              url: url,
+              dataType: 'jsonp'
+            });
+          },
 
-            filters: [
-              {
-                label: '用户属性',
+          rows: function (item) {
+            var html = ['<li>',
+              '<div class="img" style="background-image:url(' + (item.photos[0] && (item.photos[0].url + '?operate=merge&w=160&h=150&position=5') || DEFAULT_IMAGE) + ')"/>',
+              '<div class="item-main">',
+                '<div class="item-name">' + item.name + '</div>',
+                '<div class="item-address">详细地址' + item.address + '</div>',
+              '</div>',
+            '</li>'].join('');
 
-                name: 'usertype',
+            return html;
+          },
 
-                className: 'item-usertype',
+          getRowsData: function (json) {
+            return json.pois;
+          }
+        }, '#cdlist-demo');
 
-                historyKey: 'my-usertype',
+        cdList.getList();
 
-                datas: [
-                  { name: '不限', value: '' },
-                  { name: '僵尸用户', value: '1' },
-                  { name: '活跃用户', value: '2' }
-                ]
-              },
-
-              {
-                label: '用户地域',
-
-                name: 'userarea',
-
-                datas: [
-                  { name: '不限', value: '' },
-                  { name: '北京', value: '1' },
-                  { name: '上海', value: '2' }
-                ]
-              }
-            ]
-          });
-
-          var cdList = window.cdlist = new CdList({
-            disableHistory: false,
-
-            lang: 'en',
-
-            getUrl: function (data) {
-              var param = {};
-
-              console.log(data);
-
-              return '/ajax.json'
-            },
-
-            getAjaxData: function (url) {
-              return $.ajax({
-                url: url,
-                dataType: 'json'
-              });
-            },
-
-            rows: function (item) {
-              return '<li>hi:' + item.name + '</li>'
-            },
-
-            getRowsData: function (json) {
-              return json.list;
-            },
-
-            addons: [ sort, filter, pg, search, datepicker]
-          }, '#cdlist-demo');
-
-
-          cdList.getList();
 
         </script>
     </body>

@@ -233,7 +233,7 @@ export default class Inputs extends mixin(EventMixin) {
         this.option.datas.forEach((data) => {
           var historyValue = this.root.getHistoryValue(data.historyKey || data.name);
 
-          this.setValue(data.name, historyValue, true);
+          Inputs.prototype.setValue.apply(this, [data.name, historyValue, true]);
         });
       });
     }
