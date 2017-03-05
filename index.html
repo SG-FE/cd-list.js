@@ -10,7 +10,7 @@
         <div id="filter-wrap"></div>
         <div id="cdlist-demo"></div>
         <div id="page-wrap"></div>
-        
+
         <script type="text/javascript" src="//cdn.bootcss.com/jquery/3.1.1/jquery.js" charset="utf-8"></script>
         <link href="//cdn.bootcss.com/flatpickr/2.2.8/flatpickr.css" rel="stylesheet">
         <script src="//cdn.bootcss.com/flatpickr/2.2.8/flatpickr.js"></script>
@@ -24,6 +24,13 @@
           #cdlist-demo,
           #page-wrap {
             margin-bottom: 10px;
+          }
+          .item-usertype {
+            color: blue;
+          }
+
+          .cdlist-sort-type-my1:after {
+            content: 'my1'
           }
         </style>
 
@@ -55,7 +62,9 @@
                 name: '时间排序',
                 types: [
                   CdList.addons.Sort.SORT_MAP.ASC,
-                  CdList.addons.Sort.SORT_MAP.DESC
+                  CdList.addons.Sort.SORT_MAP.DESC,
+                  'my1',
+                  'my2'
                 ]
               }
             ]
@@ -98,28 +107,32 @@
           var search = window.search = new CdList.addons.Search({
             btnText: '点我吧！',
 
+            resetList: ['pagination'],
+
             placeholder: '需要输入1开头的数字',
 
-            historyEnable: true,
+            historyEnable: 1,
 
             historyKey: 'mysearch',
 
             container: '#mysearh-wrap',
 
-            regex: /133.*/,
+            regex: /1.*/,
 
             onChange: function () {
               console.log('search-change')
             }
           });
 
+          search.on('error', function () {
+            alert('输出啦');
+          })
+
           var pg = window.pg = new CdList.addons.Pagination({
             pagination: {
               allwaysShow: false,
 
-              maxShowPage: 5,
-
-              textLabel: ['头', '上', '下', '尾']
+              maxShowPage: 5
             },
 
             onChange: function () {
@@ -181,6 +194,8 @@
 
           var cdList = window.cdlist = new CdList({
             disableHistory: false,
+
+            lang: 'en',
 
             getUrl: function (data) {
               var param = {};
